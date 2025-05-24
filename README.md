@@ -83,9 +83,8 @@ Many small traders don’t track their income or expenses and have no idea if th
 
 ---
 
-## 💡 What’s Next? (Suggestions for More Marks)
+## 💡 What’s Next?
 
-> **Add these for extra points:**
 - [ ] **Voice Input:** Integrate speech-to-text for hands-free entry.
 - [ ] **Photo OCR:** Use AI to extract data from receipts/invoices.
 - [ ] **Animations & Audio Cues:** Delightful feedback for user actions.
@@ -97,30 +96,6 @@ Many small traders don’t track their income or expenses and have no idea if th
 
 ---
 
-## 📝 Comments & Feedback
-
-- **What you’ve answered well:**  
-    - Problem statement, solution, and features are clear and relevant.
-    - Good use of hackathon tools and alignment with judging criteria.
-    - Strong focus on UI/UX and user-centered design.
-
-- **Where to improve:**  
-    - Explicitly mention voice/photo input features (even if planned).
-    - Add more about security, scalability, and business model.
-    - Include screenshots, demo links, or a short video.
-    - Prepare a pitch deck for presentation.
-
----
-
 > **Let your code spark real change. Join the #1MillionDevs movement with Econtrack!**
 
 ---
-
-<!--  
-Comments for more marks:
-- Add a demo video or GIFs to showcase the app.
-- Integrate voice/photo input if possible, or clearly state it's in progress.
-- Highlight security and accessibility features.
-- Prepare a pitch deck for the final presentation.
-- Collect early user feedback or testimonials if possible.
--->
