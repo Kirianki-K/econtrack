@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tracker</title>
+    <!-- Link to external stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+    <!-- Link to external JavaScript file -->
+    </head>
+<body>
+          <!-- Header section -->
+        <header>
+            <img src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/icons/cart-fill.svg" alt="Shopping Cart" style="width:32px;height:32px;vertical-align:middle;margin-right:10px;">
+            <h1><b><big>Econtrack</big></b></h1>
+            <h2>Tracker Application</h2>
+            <p>Track your expenses and manage your finances effectively.</p>
+            <hr>
+        </header>
+          <div id="summary-boxes">
+        <div class="summary-box" id="income-box">
+            <h3>Income</h3>
+            <div id="income-value"></div>
+        </div>
+        <div class="summary-box" id="expense-box">
+            <h3>Expense</h3>
+            <div id="expense-value"></div>
+        </div>
+        <div class="summary-box" id="profit-loss-box">
+            <h3>Profit / Loss</h3>
+            <div id="profit-loss-summary"></div>
+        </div>
+    </div>
+    <!-- Main container for the tracker application -->
+    <div id="tracker-container">
+        <!-- Section for entering income and expenses -->
+        <section id="entry-section">
+            <form id="income-expense-form" autocomplete="off">
+                <label for="entry-type">Type:</label>
+                <select id="entry-type" name="entry-type" required>
+                    <option value="income">Income</option>
+                    <option value="expense">Expense</option>
+                </select>
+                <label for="entry-name">Name:</label>
+                <input type="text" id="entry-name" name="entry-name" placeholder="Salary, Rent, etc." required>
+                <label for="entry-party">Payor/Payee:</label>
+                <input type="text" id="entry-party" name="entry-party" placeholder="Who paid or received?" required>
+                <label for="entry-amount">Amount (₦):</label>
+                <input type="number" id="entry-amount" name="entry-amount" min="0.01" step="0.01" required>
+                <label for="entry-txid">Transaction ID (optional):</label>
+                <input type="text" id="entry-txid" name="entry-txid" placeholder="Transaction ID">
+                <button type="submit">Add Entry</button>
+                <button type="button" id="scan-invoice-btn" title="Scan invoice using external scanner">Scan Invoice</button>
+            </form>
+        </section>
+
+        <!-- Section to display profit or loss -->
+        <section id="profit-loss-section">
+            <h2>Profit / Loss</h2>
+            <div id="profit-loss-value"><!-- Value will be updated by JavaScript --></div>
+            <!-- 
+                Use JavaScript to calculate total income and expenses.
+                Display profit in green and loss in red using CSS.
+            -->
+        </section>
+    </div>
+</body>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    let income = 0;
+    let expense = 0;
+
+    const incomeValue = document.getElementById('income-value');
+    const expenseValue = document.getElementById('expense-value');
+    const profitLossValue = document.getElementById('profit-loss-value');
+    const profitLossSummary = document.getElementById('profit-loss-summary');
+    const form = document.getElementById('income-expense-form');
+
+    function updateDisplay() {
+        incomeValue.textContent = `₦${income.toFixed(2)}`;
+        expenseValue.textContent = `₦${expense.toFixed(2)}`;
+        const profitLoss = income - expense;
+        const isProfit = profitLoss >= 0;
+        profitLossValue.textContent = `₦${profitLoss.toFixed(2)}`;
+        profitLossSummary.textContent = `₦${profitLoss.toFixed(2)}`;
+        profitLossValue.style.color = isProfit ? 'green' : 'red';
+        profitLossSummary.style.color = isProfit ? 'green' : 'red';
+    }
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const type = document.getElementById('entry-type').value;
+        const amount = parseFloat(document.getElementById('entry-amount').value);
+        if (isNaN(amount) || amount <= 0) return;
+        if (type === 'income') {
+            income += amount;
+        } else {
+            expense += amount;
+        }
+        updateDisplay();
+        form.reset();
+    });
+
+    updateDisplay();
+});
+
+// Simple AI Chatbox (static demo)
+document.addEventListener('DOMContentLoaded', function() {
+    const chatboxHTML = `
+    <div id="ai-chatbox" style="position:fixed;bottom:20px;right:20px;width:320px;max-width:90vw;background:#fff;border:1px solid #ccc;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,0.15);z-index:1000;">
+        <div style="background:#007bff;color:#fff;padding:10px 15px;border-radius:10px 10px 0 0;font-weight:bold;">
+            Econtrack AI Assistant
+            <span id="close-chat" style="float:right;cursor:pointer;">&times;</span>
+        </div>
+        <div id="chat-messages" style="height:180px;overflow-y:auto;padding:10px;font-size:14px;"></div>
+        <form id="chat-form" style="display:flex;border-top:1px solid #eee;">
+            <input id="chat-input" type="text" placeholder="Ask about your finances..." style="flex:1;padding:8px;border:none;border-radius:0 0 0 10px;outline:none;">
+            <button type="submit" style="background:#007bff;color:#fff;border:none;padding:0 15px;border-radius:0 0 10px 0;cursor:pointer;">Send</button>
+        </form>
+    </div>
+    `;
+    document.body.insertAdjacentHTML('beforeend', chatboxHTML);
+
+    const chatMessages = document.getElementById('chat-messages');
+    const chatForm = document.getElementById('chat-form');
+    const chatInput = document.getElementById('chat-input');
+    const closeChat = document.getElementById('close-chat');
+    function aiReply(message) {
+        // Simple static responses for demo
+        message = message.toLowerCase();
+        if (message.includes('save')) {
+            return "Tip: Try to save at least 20% of your income each month!";
+        } else if (message.includes('expense')) {
+            return "Monitor your expenses regularly to avoid overspending.";
+        } else if (message.includes('profit') || message.includes('loss')) {
+            return "Profit is your income minus expenses. Keep your expenses lower than your income!";
+        } else if (message.includes('budget')) {
+            return "Creating a monthly budget helps you manage your finances better.";
+        } else {
+            return "I'm here to help! Ask me about saving, budgeting, or tracking your finances.";
+        }
+    }
+    chatForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const userMsg = chatInput.value.trim();
+        if (!userMsg) return;
+        chatMessages.innerHTML += `<div style="margin-bottom:8px;"><b>You:</b> ${userMsg}</div>`;
+        setTimeout(() => {
+            const reply = aiReply(userMsg);
+            chatMessages.innerHTML += `<div style="margin-bottom:8px;"><b>AI:</b> ${reply}</div>`;
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }, 400);
+        chatInput.value = '';
+    });
+    closeChat.addEventListener('click', function() {
+        document.getElementById('ai-chatbox').style.display = 'none';
+    });
+});
+</script>
+<script src="script.js" defer></script>
+<style>
+/* Inline CSS for form */
+#income-expense-form {
+    background: #f9f9f9;
+    padding: 18px 20px 14px 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 18px;
+    align-items: flex-end;
+    margin-bottom: 24px;
+    max-width: 700px;
+}
+
+#income-expense-form label {
+    flex: 0 0 100px;
+    font-weight: 500;
+    margin-bottom: 2px;
+}
+
+#income-expense-form input,
+#income-expense-form select {
+    flex: 1 1 180px;
+    padding: 7px 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 15px;
+    margin-bottom: 6px;
+}
+
+#income-expense-form button[type="submit"] {
+    background: #007bff;
+    color: #fff;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    margin-right: 8px;
+    transition: background 0.2s;
+}
+#income-expense-form button[type="submit"]:hover {
+    background: #0056b3;
+}
+
+#scan-invoice-btn {
+    background: #28a745;
+    color: #fff;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+#scan-invoice-btn:hover {
+    background: #1e7e34;
+}
+
+/* Inline CSS for summary boxes */
+#summary-boxes {
+    display: flex;
+    gap: 18px;
+    justify-content: center;
+    margin: 30px 0 24px 0;
+}
+
+.summary-box {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.09);
+    padding: 18px 28px;
+    min-width: 140px;
+    text-align: center;
+    border-top: 4px solid #007bff;
+    transition: box-shadow 0.2s;
+}
+
+#income-box {
+    border-top-color: #28a745;
+}
+#expense-box {
+    border-top-color: #dc3545;
+}
+#profit-loss-box {
+    border-top-color: #ffc107;
+}
+
+.summary-box h3 {
+    margin: 0 0 8px 0;
+    font-size: 1.1em;
+    color: #333;
+    letter-spacing: 0.5px;
+}
+
+.summary-box div {
+    font-size: 1.3em;
+    font-weight: bold;
+    margin-top: 4px;
+}
+</style>
+<script>
+// Mini chat button functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Create the minimized chat button
+    const miniBtn = document.createElement('div');
+    miniBtn.id = 'mini-chat-btn';
+    miniBtn.title = 'Open Econtrack AI Assistant';
+    miniBtn.style.cssText = `
+        position:fixed;bottom:24px;right:24px;z-index:1000;
+        width:54px;height:54px;background:#007bff;
+        border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,0.18);
+        display:flex;align-items:center;justify-content:center;
+        cursor:pointer;transition:box-shadow 0.2s;
+    `;
+    miniBtn.innerHTML = `<svg width="28" height="28" fill="#fff" viewBox="0 0 16 16"><path d="M8 0a8 8 0 1 0 8 8A8 8 0 0 0 8 0Zm3.93 6.588-1.39 4.26a1.13 1.13 0 0 1-1.08.752H6.54a1.13 1.13 0 0 1-1.08-.752l-1.39-4.26A.565.565 0 0 1 4.6 6h6.8a.565.565 0 0 1 .53.588ZM8 4.5a1 1 0 1 1-1 1 1 1 0 0 1 1-1Z"/></svg>`;
+    document.body.appendChild(miniBtn);
+
+    // Hide the chatbox initially
+    const chatbox = document.getElementById('ai-chatbox');
+    if (chatbox) chatbox.style.display = 'none';
+
+    // Show chatbox and hide mini button on click
+    miniBtn.addEventListener('click', function() {
+        if (chatbox) chatbox.style.display = 'block';
+        miniBtn.style.display = 'none';
+    });
+
+    // Hide chatbox and show mini button when closed
+    document.addEventListener('click', function(e) {
+        if (e.target && e.target.id === 'close-chat') {
+            if (chatbox) chatbox.style.display = 'none';
+            miniBtn.style.display = 'flex';
+        }
+    });
+});
+</script>
+<style>
+#mini-chat-btn:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.22);
+    background: #0056b3;
+}
+#mini-chat-btn svg {
+    display: block;
+    margin: auto;
+}
+@media (max-width: 600px) {
+    #mini-chat-btn {
+        width: 44px;
+        height: 44px;
+        right: 10px;
+        bottom: 10px;
+    }
+}
+</style>
+</html>

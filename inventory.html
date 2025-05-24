@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Inventory Management</title>
+    <!-- Link to external stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Inventory Management Header -->
+    <header>
+        <img src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/icons/cart-fill.svg" alt="Inventory Icon" style="width:32px;height:32px;vertical-align:middle;margin-right:10px;">
+        <h1><b><big>Econtrack</big></b></h1>
+        <h2>Inventory Management</h2>
+        <p>Manage your inventory efficiently. Add, view, and delete items as needed.</p>
+        <hr>
+    </header>
+
+    <!-- Inventory Form Section -->
+    <section id="add-inventory-section">
+        <h2>Add Inventory Item</h2>
+        <form id="add-inventory-form">
+            <label for="item-id">Item ID:</label>
+            <input type="text" id="item-id" name="item-id" required>
+
+            <label for="item-name-new">Item Name:</label>
+            <input type="text" id="item-name-new" name="item-name-new" required>
+
+            <label for="quantity-purchased">Quantity Purchased:</label>
+            <input type="number" id="quantity-purchased" name="quantity-purchased" min="1" required>
+
+            <label for="buying-price">Buying Price:</label>
+            <input type="number" id="buying-price" name="buying-price" min="0" step="0.01" required>
+
+            <label for="selling-price">Selling Price:</label>
+            <input type="number" id="selling-price" name="selling-price" min="0" step="0.01" required>
+
+            <button type="submit">Add Inventory</button>
+        </form>
+    </section>
+   
+    <!-- Link to external JavaScript file -->
+    <script src="script.js"></script>
+</body>
+<script>
+// Inventory array to store items
+let inventory = [];
+
+// Helper to format currency
+function formatCurrency(value) {
+    return '$' + Number(value).toFixed(2);
+}
+
+// Render inventory table
+function renderInventory() {
+    let section = document.getElementById('inventory-list-section');
+    if (section) section.remove();
+
+    section = document.createElement('section');
+    section.id = 'inventory-list-section';
+    section.innerHTML = `
+        <h2>Current Inventory</h2>
+        <table id="inventory-table" style="width:100%;border-collapse:collapse;margin-top:10px;">
+            <thead>
+                <tr style="background:#f5f5f5;">
+                    <th style="padding:8px;border-bottom:2px solid #ddd;">Item ID</th>
+                    <th style="padding:8px;border-bottom:2px solid #ddd;">Name</th>
+                    <th style="padding:8px;border-bottom:2px solid #ddd;">Qty</th>
+                    <th style="padding:8px;border-bottom:2px solid #ddd;">Buy Price</th>
+                    <th style="padding:8px;border-bottom:2px solid #ddd;">Sell Price</th>
+                    <th style="padding:8px;border-bottom:2px solid #ddd;">Total Cost</th>
+                    <th style="padding:8px;border-bottom:2px solid #ddd;">Potential Revenue</th>
+                    <th style="padding:8px;border-bottom:2px solid #ddd;">Potential Profit</th>
+                    <th style="padding:8px;border-bottom:2px solid #ddd;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${inventory.map((item, idx) => `
+                    <tr style="background:${idx%2===0?'#fff':'#f9f9f9'};">
+                        <td style="padding:8px;border-bottom:1px solid #eee;">${item.id}</td>
+                        <td style="padding:8px;border-bottom:1px solid #eee;">${item.name}</td>
+                        <td style="padding:8px;border-bottom:1px solid #eee;">${item.qty}</td>
+                        <td style="padding:8px;border-bottom:1px solid #eee;">${formatCurrency(item.buy)}</td>
+                        <td style="padding:8px;border-bottom:1px solid #eee;">${formatCurrency(item.sell)}</td>
+                        <td style="padding:8px;border-bottom:1px solid #eee;">${formatCurrency(item.qty * item.buy)}</td>
+                        <td style="padding:8px;border-bottom:1px solid #eee;">${formatCurrency(item.qty * item.sell)}</td>
+                        <td style="padding:8px;border-bottom:1px solid #eee;">${formatCurrency(item.qty * (item.sell - item.buy))}</td>
+                        <td style="padding:8px;border-bottom:1px solid #eee;">
+                            <button onclick="deleteItem(${idx})" style="background:#e74c3c;color:#fff;border:none;padding:6px 12px;border-radius:4px;cursor:pointer;">Delete</button>
+                        </td>
+                    </tr>
+                `).join('')}
+            </tbody>
+        </table>
+        <div style="margin-top:15px;padding:10px;background:#f0f8ff;border-radius:6px;">
+            <b>Total Inventory Value:</b> ${formatCurrency(inventory.reduce((sum, i) => sum + i.qty * i.buy, 0))}
+            &nbsp; | &nbsp;
+            <b>Total Potential Profit:</b> ${formatCurrency(inventory.reduce((sum, i) => sum + i.qty * (i.sell - i.buy), 0))}
+        </div>
+    `;
+    document.body.appendChild(section);
+}
+
+// Delete item
+window.deleteItem = function(idx) {
+    inventory.splice(idx, 1);
+    renderInventory();
+};
+
+// Handle form submit
+document.getElementById('add-inventory-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const id = document.getElementById('item-id').value.trim();
+    const name = document.getElementById('item-name-new').value.trim();
+    const qty = parseInt(document.getElementById('quantity-purchased').value, 10);
+    const buy = parseFloat(document.getElementById('buying-price').value);
+    const sell = parseFloat(document.getElementById('selling-price').value);
+
+    if (!id || !name || qty < 1 || buy < 0 || sell < 0) return;
+
+    inventory.push({ id, name, qty, buy, sell });
+    renderInventory();
+    this.reset();
+});
+
+// Initial render
+renderInventory();
+</script>
+<style>
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #f4f7fa;
+    color: #222;
+    margin: 0;
+    padding: 0 0 40px 0;
+}
+header {
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    padding: 24px 32px 16px 32px;
+    border-radius: 0 0 12px 12px;
+    margin-bottom: 24px;
+}
+h1, h2 {
+    margin: 0 0 8px 0;
+}
+section {
+    background: #fff;
+    margin: 24px auto;
+    padding: 24px 32px;
+    border-radius: 10px;
+    max-width: 900px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+form label {
+    display: block;
+    margin-top: 12px;
+    font-weight: 500;
+}
+form input {
+    width: 100%;
+    padding: 8px 10px;
+    margin-top: 4px;
+    border: 1px solid #d1d5db;
+    border-radius: 5px;
+    font-size: 1em;
+    box-sizing: border-box;
+    background: #f9fafb;
+    transition: border 0.2s;
+}
+form input:focus {
+    border: 1.5px solid #0078d7;
+    outline: none;
+    background: #fff;
+}
+form button[type="submit"] {
+    margin-top: 18px;
+    background: linear-gradient(90deg,#0078d7,#00b4d8);
+    color: #fff;
+    border: none;
+    padding: 10px 22px;
+    border-radius: 6px;
+    font-size: 1em;
+    cursor: pointer;
+    font-weight: 600;
+    box-shadow: 0 2px 6px rgba(0,120,215,0.08);
+    transition: background 0.2s;
+}
+form button[type="submit"]:hover {
+    background: linear-gradient(90deg,#005fa3,#0096c7);
+}
+table th, table td {
+    text-align: left;
+}
+@media (max-width: 700px) {
+    section, header {
+        padding: 12px 6vw;
+    }
+    table, thead, tbody, th, td, tr {
+        display: block;
+    }
+    table th, table td {
+        padding: 8px 0;
+        border-bottom: none;
+    }
+}
+</style>
+</html>

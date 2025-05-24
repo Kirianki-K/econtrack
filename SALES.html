@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Econtrack//Sales</title>
+    <!-- Link to external stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Auto-filled Date Field -->
+    <div style="margin-bottom:12px;">
+        <label for="saleDate">Date:</label>
+        <input type="date" id="saleDate" name="saleDate" readonly style="background:#f5f5f5;">
+    </div>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const dateInput = document.getElementById('saleDate');
+        if (dateInput) {
+            const today = new Date();
+            const yyyy = today.getFullYear();
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
+            const dd = String(today.getDate()).padStart(2, '0');
+            dateInput.value = `${yyyy}-${mm}-${dd}`;
+        }
+    });
+    </script>
+    <!-- Main container for sales form -->
+    <div class="sales-container">
+        <img src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/icons/cart-fill.svg" alt="Shopping Cart" style="width:32px;height:32px;vertical-align:middle;margin-right:10px;"" alt="Econtrack Logo" class="logo">
+        <h1><b><big>Econtrack</big></b></h1>
+        <h2>Sales Form</h2>
+           <!-- Customer Name Input -->
+            <label for="customerName">Customer Name:</label>
+            <input type="text" id="""customerName" name="customerName" >
+            <label for="customerPhone">Customer Phone:</label>
+            <input type="text" id="customerPhone" name="customerPhone" >
+        <!-- Sales form -->
+        <form id="salesForm">
+            <table id="salesTable">
+                <thead>
+                    <tr>
+                        <th>Item ID</th>
+                        <th>Item Name</th>
+                        <th>Quantity Bought</th>
+                        <th>Gross Price</th>
+                        <th>Net Price</th>
+                        <th>Add Item</th>
+                        <th>Remove Item</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><input type="text" name="itemId[]" placeholder="Scan or enter ID" required></td>
+                        <td><input type="text" name="itemName[]" placeholder="Item Name" required></td>
+                        <td><input type="number" name="quantity[]" min="1" value="1" required></td>
+                        <td><input type="number" name="grossPrice[]" min="0" step="0.01" placeholder="0.00" required></td>
+                        <td><input type="number" name="netPrice[]" min="0" step="0.01" placeholder="0.00" required></td>
+                        <td><button type="button" class="addRowBtn">+</button></td>
+                        <td><button type="button" class="removeRowBtn">-</button></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div style="margin-top:20px;">
+                <button type="button" id="submitSaleBtn" title="Cash Sale" style="font-size:1.1em;">
+                    <img src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/icons/cash-coin.svg" alt="Cash" style="width:20px;vertical-align:middle;margin-right:5px;"> Submit Sale
+                </button>
+                <button type="button" id="mobilePaymentBtn" title="Mobile Payment" style="font-size:1.1em;">
+                    <img src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/icons/phone.svg" alt="Mobile" style="width:20px;vertical-align:middle;margin-right:5px;"> Mobile Payment
+                </button>
+                <button type="button" id="creditSaleBtn" title="Credit Sale" style="font-size:1.1em;">
+                    <img src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/icons/credit-card-2-front-fill.svg" alt="Credit" style="width:20px;vertical-align:middle;margin-right:5px;"> Credit Sale
+                </button>
+            </div>
+
+            <!-- Cash Sale Modal -->
+            <div id="cashModal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.3);z-index:2000;align-items:center;justify-content:center;">
+                <div style="background:#fff;padding:24px 32px;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,0.15);min-width:260px;position:relative;">
+                    <span style="position:absolute;top:8px;right:12px;cursor:pointer;font-size:1.3em;" id="closeCashModal">&times;</span>
+                    <h3>
+                        <img src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/icons/cash-coin.svg" alt="Cash" style="width:22px;vertical-align:middle;margin-right:5px;">
+                        Cash Payment
+                    </h3>
+                    <div style="margin:10px 0;">
+                        <label>Total: </label>
+                        <span id="cashTotal" style="font-weight:bold;"></span>
+                    </div>
+                    <div style="margin:10px 0;">
+                        <label for="amountPaid">Amount Paid:</label>
+                        <input type="number" id="amountPaid" min="0" step="0.01" style="width:100px;">
+                    </div>
+                    <div style="margin:10px 0;">
+                        <label>Change:</label>
+                        <span id="changeDue" style="font-weight:bold;">$0.00</span>
+                    </div>
+                    <button type="button" id="confirmCashSale" style="margin-top:10px;">
+                        <img src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/icons/check-circle-fill.svg" alt="Confirm" style="width:18px;vertical-align:middle;margin-right:4px;"> Confirm Sale
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mobile Payment Modal -->
+            <div id="mobileModal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.3);z-index:2000;align-items:center;justify-content:center;">
+                <div style="background:#fff;padding:24px 32px;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,0.15);min-width:260px;position:relative;">
+                    <span style="position:absolute;top:8px;right:12px;cursor:pointer;font-size:1.3em;" id="closeMobileModal">&times;</span>
+                    <h3>
+                        <img src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/icons/phone.svg" alt="Mobile" style="width:22px;vertical-align:middle;margin-right:5px;">
+                        Mobile Payment
+                    </h3>
+                    <div style="margin:10px 0;">
+                        <label>Total: </label>
+                        <span id="mobileTotal" style="font-weight:bold;"></span>
+                    </div>
+                    <div style="margin:10px 0;">
+                        <label for="mobileRef">Transaction Ref:</label>
+                        <input type="text" id="mobileRef" style="width:140px;">
+                    </div>
+                    <button type="button" id="confirmMobileSale" style="margin-top:10px;">
+                        <img src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/icons/check-circle-fill.svg" alt="Confirm" style="width:18px;vertical-align:middle;margin-right:4px;"> Confirm Sale
+                    </button>
+                </div>
+            </div>
+
+            <!-- Credit Sale Modal -->
+            <div id="creditModal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.3);z-index:2000;align-items:center;justify-content:center;">
+                <div style="background:#fff;padding:24px 32px;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,0.15);min-width:260px;position:relative;">
+                    <span style="position:absolute;top:8px;right:12px;cursor:pointer;font-size:1.3em;" id="closeCreditModal">&times;</span>
+                    <h3>
+                        <img src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/icons/credit-card-2-front-fill.svg" alt="Credit" style="width:22px;vertical-align:middle;margin-right:5px;">
+                        Credit Sale
+                    </h3>
+                    <div style="margin:10px 0;">
+                        <label>Total: </label>
+                        <span id="creditTotal" style="font-weight:bold;"></span>
+                    </div>
+                    <div style="margin:10px 0;">
+                        <label for="creditNote">Credit Note:</label>
+                        <input type="text" id="creditNote" style="width:140px;" placeholder="Optional note">
+                    </div>
+                    <button type="button" id="confirmCreditSale" style="margin-top:10px;">
+                        <img src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/icons/check-circle-fill.svg" alt="Confirm" style="width:18px;vertical-align:middle;margin-right:4px;"> Confirm Sale
+                    </button>
+                </div>
+            </div>
+
+            <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Helper to get total sales
+                function getTotalSales() {
+                    let total = 0;
+                    document.querySelectorAll('input[name="netPrice[]"]').forEach(input => {
+                        total += parseFloat(input.value) || 0;
+                    });
+                    return total;
+                }
+
+                // Cash Sale Modal
+                const cashModal = document.getElementById('cashModal');
+                const submitSaleBtn = document.getElementById('submitSaleBtn');
+                const cashTotal = document.getElementById('cashTotal');
+                const amountPaid = document.getElementById('amountPaid');
+                const changeDue = document.getElementById('changeDue');
+                const closeCashModal = document.getElementById('closeCashModal');
+                const confirmCashSale = document.getElementById('confirmCashSale');
+
+                confirmCashSale.onclick = function() {
+                    alert('Sale completed!\nChange: ' + changeDue.textContent);
+                    cashModal.style.display = 'none';
+                    location.reload();
+                };
+                submitSaleBtn.onclick = function() {
+                    cashTotal.textContent = '$' + getTotalSales().toFixed(2);
+                    amountPaid.value = '';
+                    changeDue.textContent = '$0.00';
+                    cashModal.style.display = 'flex';
+                };
+                closeCashModal.onclick = function() { cashModal.style.display = 'none'; };
+                amountPaid.oninput = function() {
+                    let paid = parseFloat(amountPaid.value) || 0;
+                    let total = getTotalSales();
+                    let change = paid - total;
+                    changeDue.textContent = '$' + (change >= 0 ? change.toFixed(2) : '0.00');
+                };
+                confirmCashSale.onclick = function() {
+                    alert('Sale completed!\nChange: ' + changeDue.textContent);
+                    cashModal.style.display = 'none';
+                    // Optionally reset form here
+                };
+
+                // Mobile Payment Modal
+                const mobileModal = document.getElementById('mobileModal');
+                const mobilePaymentBtn = document.getElementById('mobilePaymentBtn');
+                const mobileTotal = document.getElementById('mobileTotal');
+                const mobileRef = document.getElementById('mobileRef');
+                const closeMobileModal = document.getElementById('closeMobileModal');
+                const confirmMobileSale = document.getElementById('confirmMobileSale');
+
+                mobilePaymentBtn.onclick = function() {
+                    mobileTotal.textContent = '$' + getTotalSales().toFixed(2);
+                    mobileRef.value = '';
+                    mobileModal.style.display = 'flex';
+                };
+                closeMobileModal.onclick = function() { mobileModal.style.display = 'none'; };
+                confirmMobileSale.onclick = function() {
+                    if (!mobileRef.value.trim()) {
+                        alert('Please enter transaction reference!');
+                        return;
+                    }
+                    alert('Mobile payment recorded!\nRef: ' + mobileRef.value);
+                    mobileModal.style.display = 'none';
+                    // Optionally reset form here
+                };
+
+                // Credit Sale Modal
+                const creditModal = document.getElementById('creditModal');
+                const creditSaleBtn = document.getElementById('creditSaleBtn');
+                const creditTotal = document.getElementById('creditTotal');
+                const creditNote = document.getElementById('creditNote');
+                const closeCreditModal = document.getElementById('closeCreditModal');
+                const confirmCreditSale = document.getElementById('confirmCreditSale');
+
+                creditSaleBtn.onclick = function() {
+                    creditTotal.textContent = '$' + getTotalSales().toFixed(2);
+                    creditNote.value = '';
+                    creditModal.style.display = 'flex';
+                };
+                closeCreditModal.onclick = function() { creditModal.style.display = 'none'; };
+                confirmCreditSale.onclick = function() {
+                    alert('Credit sale recorded!\nNote: ' + creditNote.value);
+                    creditModal.style.display = 'none';
+                    // Optionally reset form here
+                };
+
+                // Close modal on outside click
+                [cashModal, mobileModal, creditModal].forEach(modal => {
+                    modal.addEventListener('click', function(e) {
+                        if (e.target === modal) modal.style.display = 'none';
+                    });
+                });
+            });
+            </script>
+        </form>
+        <form id="salesForm">
+         
+
+        <!-- Placeholder for displaying sales records -->
+        <div id="salesRecords">
+            <!-- Sales records will be dynamically inserted here by script.js -->
+        </div>
+    </div>
+</body>
+    <!-- Link to external JavaScript file -->
+    <script src="script.js" defer></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const salesTable = document.getElementById('salesTable').getElementsByTagName('tbody')[0];
+        const addRowBtnClass = 'addRowBtn';
+        const netPriceInputs = () => salesTable.querySelectorAll('input[name="netPrice[]"]');
+        const grossPriceInputs = () => salesTable.querySelectorAll('input[name="grossPrice[]"]');
+        const quantityInputs = () => salesTable.querySelectorAll('input[name="quantity[]"]');
+        const itemNameInputs = () => salesTable.querySelectorAll('input[name="itemName[]"]');
+        const itemIdInputs = () => salesTable.querySelectorAll('input[name="itemId[]"]');
+        let totalDiv = document.createElement('div');
+        totalDiv.style.position = 'absolute';
+        totalDiv.style.right = '40px';
+        totalDiv.style.bottom = '40px';
+        totalDiv.style.fontWeight = 'bold';
+        totalDiv.style.fontSize = '1.2em';
+        totalDiv.id = 'totalSalesDiv';
+        document.body.appendChild(totalDiv);
+
+        // Simple product name prediction
+        const productNames = [
+            "Apple", "Banana", "Orange", "Milk", "Bread", "Eggs", "Rice", "Sugar", "Salt", "Butter",
+            "Cheese", "Chicken", "Beef", "Fish", "Tomato", "Potato", "Onion", "Carrot", "Cereal", "Juice"
+        ];
+
+        function updateNetPrice(row) {
+            const gross = parseFloat(row.querySelector('input[name="grossPrice[]"]').value) || 0;
+            const qty = parseFloat(row.querySelector('input[name="quantity[]"]').value) || 0;
+            const netInput = row.querySelector('input[name="netPrice[]"]');
+            netInput.value = (gross * qty).toFixed(2);
+        }
+
+        function updateTotal() {
+            let total = 0;
+            netPriceInputs().forEach(input => {
+                total += parseFloat(input.value) || 0;
+            });
+            totalDiv.textContent = 'Total Sales: $' + total.toFixed(2);
+        }
+
+        function addRow() {
+            const newRow = salesTable.rows[0].cloneNode(true);
+            Array.from(newRow.querySelectorAll('input')).forEach(input => {
+                input.value = '';
+            });
+            newRow.querySelector('button').addEventListener('click', addRow);
+            salesTable.appendChild(newRow);
+            attachInputListeners(newRow);
+        }
+        function removeRow(event) {
+            const btn = event.target;
+            const row = btn.closest('tr');
+            // Only remove if more than one row remains
+            if (salesTable.rows.length > 1) {
+                row.remove();
+                updateTotal();
+            } else {
+                // Optionally clear the row instead of removing the last one
+                Array.from(row.querySelectorAll('input')).forEach(input => input.value = '');
+                updateNetPrice(row);
+                updateTotal();
+            }
+        }
+
+        // Attach removeRow to all remove buttons (including new rows)
+        function attachRemoveBtn(row) {
+            row.querySelector('.removeRowBtn').addEventListener('click', removeRow);
+        }
+
+        // Attach to initial row
+        attachRemoveBtn(salesTable.rows[0]);
+
+        // Update addRow to also attach removeRow handler
+        function addRow() {
+            const newRow = salesTable.rows[0].cloneNode(true);
+            Array.from(newRow.querySelectorAll('input')).forEach(input => {
+                input.value = '';
+            });
+            newRow.querySelector('.addRowBtn').addEventListener('click', addRow);
+            attachRemoveBtn(newRow);
+            salesTable.appendChild(newRow);
+            attachInputListeners(newRow);
+        }
+
+        function attachInputListeners(row) {
+            row.querySelector('input[name="grossPrice[]"]').addEventListener('input', function() {
+                updateNetPrice(row);
+                updateTotal();
+            });
+            row.querySelector('input[name="quantity[]"]').addEventListener('input', function() {
+                updateNetPrice(row);
+                updateTotal();
+            });
+            row.querySelector('input[name="itemName[]"]').addEventListener('input', function(e) {
+                showPrediction(e.target);
+            });
+            row.querySelector('input[name="itemName[]"]').addEventListener('blur', function(e) {
+                setTimeout(() => hidePrediction(e.target), 200);
+            });
+        }
+
+        // Attach listeners to initial row
+        attachInputListeners(salesTable.rows[0]);
+
+        // Add row button
+        salesTable.querySelector('button').addEventListener('click', addRow);
+
+        // Autofill net price and total on load
+        updateNetPrice(salesTable.rows[0]);
+        updateTotal();
+
+        // Text prediction for item name
+        function showPrediction(input) {
+            let val = input.value.toLowerCase();
+            let matches = productNames.filter(name => name.toLowerCase().startsWith(val) && val.length > 0);
+            let list = input.nextSibling && input.nextSibling.className === 'predict-list'
+                ? input.nextSibling
+                : document.createElement('ul');
+            list.className = 'predict-list';
+            list.style.position = 'absolute';
+            list.style.background = '#fff';
+            list.style.border = '1px solid #ccc';
+            list.style.margin = 0;
+            list.style.padding = '2px 0';
+            list.style.listStyle = 'none';
+            list.style.zIndex = 1000;
+            list.innerHTML = '';
+            matches.forEach(match => {
+                let li = document.createElement('li');
+                li.textContent = match;
+                li.style.padding = '2px 10px';
+                li.style.cursor = 'pointer';
+                li.addEventListener('mousedown', function() {
+                    input.value = match;
+                    hidePrediction(input);
+                });
+                list.appendChild(li);
+            });
+            if (matches.length) {
+                input.parentNode.appendChild(list);
+            } else {
+                hidePrediction(input);
+            }
+        }
+
+        function hidePrediction(input) {
+            let list = input.nextSibling;
+            if (list && list.className === 'predict-list') {
+                list.remove();
+            }
+        }
+    });
+    </script>
+    <style>
+        /* Date input styling */
+        #saleDate {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 6px 10px;
+            font-size: 1em;
+            background: #f5f5f5;
+            color: #333;
+            width: 160px;
+        }
+
+        /* Table styling */
+        #salesTable {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 18px;
+        }
+        #salesTable th, #salesTable td {
+            border: 1px solid #ddd;
+            padding: 8px 6px;
+            text-align: left;
+        }
+        #salesTable th {
+            background: #f0f0f0;
+            font-weight: bold;
+        }
+        #salesTable input[type="text"],
+        #salesTable input[type="number"] {
+            width: 98%;
+            padding: 4px 6px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            font-size: 1em;
+        }
+        .addRowBtn, .removeRowBtn {
+         
+            cursor: pointer;
+        }
+        .addRowBtn:hover, .removeRowBtn:hover {
+            background: #d1e7dd;
+        }
+
+        /* Total sales positioning */
+        #totalSalesDiv {
+            position: static !important;
+            margin: 18px 0 8px 0;
+            text-align: right;
+            font-size: 1.15em;
+            color: #1a4d1a;
+        }
+
+        /* Prediction dropdown styling */
+        .predict-list {
+            max-height: 120px;
+            overflow-y: auto;
+        }
+    </style>
+    </style>
+<link rel="JavaScript" href="script.js">
+
+</html>

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Econtrack</title>
+    <!-- Link to external stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Hamburger menu button -->
+    <button id="hamburger-menu" aria-label="Open navigation menu" style="background:none;border:none;cursor:pointer;">
+        <svg width="32" height="32" viewBox="0 0 32 32">
+            <rect y="6" width="32" height="4" rx="2" fill="#333"/>
+            <rect y="14" width="32" height="4" rx="2" fill="#333"/>
+            <rect y="22" width="32" height="4" rx="2" fill="#333"/>
+        </svg>
+    </button>
+
+    <!-- Hamburger menu navigation (hidden by default, show with CSS/JS) -->
+    <nav id="mobile-nav" style="display:none;">
+        <ul>
+            <li><a href="SALES.html">sales</a></li>
+            <li><a href="Tracker.html">Finance Tracker</a></li>
+            <li><a href="inventory.html">Inventory Manager</a></li>
+            <li><a href="settings.html">Settings</a></li>
+        </ul>
+    </nav>
+    <!-- Main container for the application -->
+    <div id="app-container">
+        <!-- Header section -->
+        <header>
+            <img src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/icons/cart-fill.svg" alt="Shopping Cart" style="width:32px;height:32px;vertical-align:middle;margin-right:10px;">
+            <h1><b><big>Econtrack</big></b></h1>
+            <p>Your personal finance tracker</p>
+            <hr>
+            <h2>Dashboard</h2>
+            <p>Welcome to your financial dashboard. Here you can track your expenses, view reports, and manage your settings.</p>
+        </header>
+
+        <!-- Navigation menu -->
+        <nav>
+            <ul>
+                <li><a href="SALES.html">sales</a></li>
+                <li><a href="Tracker.html">Finance Tracker</a></li>
+                <li><a href="inventory.html">Inventory Manager</a></li>
+                <li><a href="settings.html">Settings</a></li>
+            </ul>
+        </nav>
+
+        <!-- Main content area -->
+        <main>
+            <!-- Overview section -->
+            <section id="overview">
+                <h2>Account Overview</h2>
+                <div id="balance-summary">
+                    <!-- Balance summary will be populated by JavaScript -->
+                </div>
+            </section>
+
+            <!-- Transactions section -->
+            <section id="transactions">
+                <h2>Recent Transactions</h2>
+                <table id="transactions-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Description</th>
+                            <th>Amount</th>
+                            <th>Category</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Transaction rows will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Reports section -->
+            <section id="reports">
+                <h2>Reports</h2>
+                <div id="reports-content">
+                    <!-- Reports content will be populated by JavaScript -->
+                </div>
+            </section>
+
+            <!-- Settings section -->
+            <section id="settings">
+                <h2>Settings</h2>
+                <form id="settings-form">
+                    <label for="currency">Preferred Currency:</label>
+                    <select id="currency" name="currency">
+                        <option value="KES">KES</option>
+                        <option value="usd">USD</option>
+                        <option value="eur">EUR</option>
+                        <option value="gbp">GBP</option>
+                        <option value="jpy">JPY</option>
+                    </select>
+                    <button type="submit">Save</button>
+                </form>
+            </section>
+        </main>
+
+        <!-- Footer section -->
+        <footer>
+            <p>&copy; 2024 Econtrack. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <!-- Link to external JavaScript file -->
+    <script src="script.js"></script>
+</body>
+<script>
+// Hamburger menu toggle
+document.getElementById('hamburger-menu').onclick = function() {
+    const nav = document.getElementById('mobile-nav');
+    nav.style.display = nav.style.display === 'block' ? 'none' : 'block';
+};
+
+// Example data
+const transactions = [
+    { date: '2024-06-01', description: 'Groceries', amount: -2500, category: 'Food' },
+    { date: '2024-06-02', description: 'Salary', amount: 50000, category: 'Income' },
+    { date: '2024-06-03', description: 'Electricity Bill', amount: -1200, category: 'Utilities' },
+    { date: '2024-06-04', description: 'Coffee', amount: -300, category: 'Food' }
+];
+
+// Balance summary
+function updateBalanceSummary() {
+    const total = transactions.reduce((sum, t) => sum + t.amount, 0);
+    document.getElementById('balance-summary').innerHTML =
+        `<p><b>Current Balance:</b> ${total.toLocaleString()} KES</p>`;
+}
+updateBalanceSummary();
+
+// Transactions table
+function populateTransactions() {
+    const tbody = document.querySelector('#transactions-table tbody');
+    tbody.innerHTML = '';
+    transactions.forEach(t => {
+        tbody.innerHTML += `
+            <tr>
+                <td>${t.date}</td>
+                <td>${t.description}</td>
+                <td>${t.amount < 0 ? '-' : ''}${Math.abs(t.amount).toLocaleString()} KES</td>
+                <td>${t.category}</td>
+            </tr>
+        `;
+    });
+}
+populateTransactions();
+
+// Reports
+function updateReports() {
+    const income = transactions.filter(t => t.amount > 0).reduce((sum, t) => sum + t.amount, 0);
+    const expenses = transactions.filter(t => t.amount < 0).reduce((sum, t) => sum + t.amount, 0);
+    document.getElementById('reports-content').innerHTML =
+        `<p><b>Total Income:</b> ${income.toLocaleString()} KES</p>
+         <p><b>Total Expenses:</b> ${Math.abs(expenses).toLocaleString()} KES</p>`;
+}
+updateReports();
+
+// Settings form
+document.getElementById('settings-form').onsubmit = function(e) {
+    e.preventDefault();
+    alert('Settings saved!');
+};
+
+// Simple FAQ AI Chatbot
+const faqAnswers = {
+    "add a transaction": "Go to the Finance Tracker page and use the 'Add Transaction' button.",
+    "change currency": "Go to Settings and select your preferred currency, then click Save.",
+    "view reports": "Reports are in the Dashboard under the Reports section.",
+    "track expenses": "All your expenses are listed in Recent Transactions and summarized in Reports."
+};
+function getChatbotAnswer(q) {
+    q = q.trim().toLowerCase();
+    for (const key in faqAnswers) if (q.includes(key)) return faqAnswers[key];
+    return "Sorry, I don't have an answer for that. Please contact support.";
+}
+
+// Blue popup AI chatbox
+const chatHTML = `
+<div id="ai-chatbox" style="position:fixed;bottom:24px;right:24px;width:320px;max-width:90vw;z-index:9999;display:none;">
+  <div style="background:#007bff;color:#fff;padding:12px 16px;border-radius:12px 12px 0 0;display:flex;justify-content:space-between;align-items:center;">
+    <span style="font-weight:bold;">Econtrack AI Assistant</span>
+    <button id="ai-chatbox-close" style="background:none;border:none;color:#fff;font-size:20px;cursor:pointer;">&times;</button>
+  </div>
+  <div id="ai-chatbox-messages" style="background:#fff;height:180px;overflow-y:auto;padding:10px;font-size:14px;"></div>
+  <form id="ai-chatbox-form" style="display:flex;border-top:1px solid #eee;background:#f8f9fa;">
+    <input id="ai-chatbox-input" type="text" placeholder="Ask a question..." style="flex:1;padding:8px;border:none;background:transparent;">
+    <button type="submit" style="background:#007bff;color:#fff;border:none;padding:0 16px;cursor:pointer;border-radius:0 0 12px 0;">Send</button>
+  </form>
+</div>
+<button id="ai-chatbox-btn" title="Open AI Assistant" style="position:fixed;bottom:24px;right:24px;width:54px;height:54px;background:#007bff;border:none;border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,0.18);display:flex;align-items:center;justify-content:center;z-index:9998;cursor:pointer;">
+  <svg width="28" height="28" fill="#fff" viewBox="0 0 16 16"><path d="M8 0a8 8 0 1 0 8 8A8 8 0 0 0 8 0Zm3.93 6.588-1.39 4.26a1.13 1.13 0 0 1-1.08.752H6.54a1.13 1.13 0 0 1-1.08-.752l-1.39-4.26A.565.565 0 0 1 4.6 6h6.8a.565.565 0 0 1 .53.588ZM8 4.5a1 1 0 1 1-1 1 1 1 0 0 1 1-1Z"/></svg>
+</button>
+`;
+document.body.insertAdjacentHTML('beforeend', chatHTML);
+
+const chatbox = document.getElementById('ai-chatbox');
+const chatBtn = document.getElementById('ai-chatbox-btn');
+chatBtn.onclick = () => {
+    chatbox.style.display = 'block';
+    chatBtn.style.display = 'none';
+};
+document.getElementById('ai-chatbox-close').onclick = () => {
+    chatbox.style.display = 'none';
+    chatBtn.style.display = 'flex';
+};
+document.getElementById('ai-chatbox-form').onsubmit = function(e) {
+    e.preventDefault();
+    const input = document.getElementById('ai-chatbox-input');
+    const msg = input.value.trim();
+    if (!msg) return;
+    const messages = document.getElementById('ai-chatbox-messages');
+    messages.innerHTML += `<div><b>You:</b> ${msg}</div>`;
+    messages.innerHTML += `<div><b>Bot:</b> ${getChatbotAnswer(msg)}</div>`;
+    messages.scrollTop = messages.scrollHeight;
+    input.value = '';
+};
+</script>
+<style>
+#ai-chatbox::-webkit-scrollbar { width: 6px; }
+#ai-chatbox::-webkit-scrollbar-thumb { background: #e0e0e0; border-radius: 3px; }
+#ai-chatbox-btn:hover { background: #0056b3; }
+#ai-chatbox input:focus { outline: none; }
+@media (max-width:600px) {
+    #ai-chatbox, #ai-chatbox-btn { right: 10px; bottom: 10px; }
+    #ai-chatbox { width: 98vw; }
+    #ai-chatbox-btn { width:44px;height:44px; }
+}
+</style>
+</html>

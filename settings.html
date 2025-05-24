@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Settings</title>
+    <!-- Link to external stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+   </head>
+<body>
+    <!-- Settings Page Container -->
+    <div class="settings-container">
+        <h1>Settings</h1>
+        
+        <!-- Profile Section -->
+        <section class="profile-section">
+            <h2>Profile</h2>
+            <form id="profile-form">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+                
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+                
+                <button type="submit">Save Profile</button>
+            </form>
+        </section>
+        
+        <!-- Password Section -->
+        <section class="password-section">
+            <h2>Change Password</h2>
+            <form id="password-form">
+                <label for="current-password">Current Password:</label>
+                <input type="password" id="current-password" name="current-password" required>
+                
+                <label for="new-password">New Password:</label>
+                <input type="password" id="new-password" name="new-password" required>
+                
+                <label for="confirm-password">Confirm New Password:</label>
+                <input type="password" id="confirm-password" name="confirm-password" required>
+                
+                <button type="submit">Change Password</button>
+            </form>
+        </section>
+        
+        <!-- Notification Preferences Section -->
+        <section class="notifications-section">
+            <h2>Notification Preferences</h2>
+            <form id="notifications-form">
+                <label>
+                    <input type="checkbox" name="email-notifications">
+                    Email Notifications
+                </label>
+                <label>
+                    <input type="checkbox" name="sms-notifications">
+                    SMS Notifications
+                </label>
+                <button type="submit">Save Preferences</button>
+            </form>
+        </section>
+    </div>
+    <!-- Additional Settings Section -->
+    <section class="additional-settings-section">
+        <h2>General Settings</h2>
+        <form id="general-settings-form">
+            <label for="mode">Mode:</label>
+            <select id="mode" name="mode">
+                <option value="light">Light</option>
+                <option value="dark">Dark</option>
+                <option value="system">System Default</option>
+            </select>
+
+            <label for="currency">Currency:</label>
+            <select id="currency" name="currency">
+                <option value="KES">KES - Kenyan Shilling</option>
+                <option value="usd">USD - US Dollar</option>
+                <option value="eur">EUR - Euro</option>
+                <option value="gbp">GBP - British Pound</option>
+                <option value="jpy">JPY - Japanese Yen</option>
+                <option value="inr">INR - Indian Rupee</option>
+                <option value="aud">AUD - Australian Dollar</option>
+                <option value="cad">CAD - Canadian Dollar</option>
+            </select>
+
+            <button type="submit">Save General Settings</button>
+        </form>
+    </section>
+    <!-- End of Settings Page Container -->
+</body>
+ <!-- Link to external JavaScript file -->
+    <script src="script.js" defer></script>
+</html>

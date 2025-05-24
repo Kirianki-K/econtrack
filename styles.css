@@ -1,0 +1,257 @@
+/* 
+    Modern & Sleek Stylesheet for Sales Till App
+    --------------------------------------------
+    - Clean, minimal, and visually appealing
+    - Consistent, reusable, and responsive
+    - No footer or persistent "Sales App" div
+*/
+
+/* Reset & base styles */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    background: linear-gradient(120deg, #f7fafc 0%, #e3e9f7 100%);
+    color: #23272f;
+    min-height: 100vh;
+    line-height: 1.7;
+    letter-spacing: 0.01em;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Main container */
+.container {
+    max-width: 900px;
+    margin: 3rem auto;
+    padding: 2.5rem 2rem;
+    background: rgba(255,255,255,0.96);
+    border-radius: 18px;
+    box-shadow: 0 8px 32px rgba(30, 64, 175, 0.09);
+    backdrop-filter: blur(2px);
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+    color: #1e293b;
+    font-weight: 700;
+    margin-bottom: 1.2rem;
+    letter-spacing: 0.02em;
+}
+
+h1 {
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+}
+
+h2 {
+    font-size: 2rem;
+}
+
+h3 {
+    font-size: 1.4rem;
+}
+
+/* Buttons */
+.button, button, input[type="submit"] {
+    background: linear-gradient(90deg, #2563eb 0%, #1e40af 100%);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 0.85em 2em;
+    font-size: 1.08rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 2px 12px rgba(37,99,235,0.10);
+    transition: background 0.18s, transform 0.12s, box-shadow 0.18s;
+    outline: none;
+    letter-spacing: 0.03em;
+}
+
+.button:hover, button:hover, input[type="submit"]:hover {
+    background: linear-gradient(90deg, #1e40af 0%, #2563eb 100%);
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 6px 24px rgba(37,99,235,0.13);
+}
+
+/* Inputs & selects */
+input[type="text"],
+input[type="number"],
+input[type="password"],
+input[type="email"],
+select,
+textarea {
+    width: 100%;
+    padding: 0.85em 1em;
+    border: 1.5px solid #dbeafe;
+    border-radius: 10px;
+    margin-bottom: 1.2rem;
+    font-size: 1.05rem;
+    background: #f1f5fa;
+    transition: border 0.18s, box-shadow 0.18s;
+    box-shadow: 0 1px 4px rgba(30,64,175,0.03);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 2px #2563eb22;
+    outline: none;
+}
+
+/* Table styles */
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-bottom: 2.5rem;
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(30,64,175,0.06);
+}
+
+th, td {
+    padding: 1.1em 1em;
+    text-align: left;
+    font-size: 1.01rem;
+}
+
+th {
+    background: linear-gradient(90deg, #e0e7ef 0%, #f1f5fa 100%);
+    color: #1e293b;
+    font-weight: 700;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+tr {
+    transition: background 0.15s;
+}
+
+tr:nth-child(even) {
+    background: #f6f8fa;
+}
+
+tr:hover {
+    background: #e0e7ef44;
+}
+
+/* Form layout */
+.form-group {
+    margin-bottom: 1.7rem;
+}
+
+/* Utility classes */
+.text-center { text-align: center; }
+.mt-2 { margin-top: 0.7rem; }
+.mt-4 { margin-top: 1.4rem; }
+.mb-2 { margin-bottom: 0.7rem; }
+.mb-4 { margin-bottom: 1.4rem; }
+.p-2 { padding: 0.7rem; }
+.p-4 { padding: 1.4rem; }
+
+/* Responsive design */
+@media (max-width: 700px) {
+    .container {
+        padding: 1.2rem 0.5rem;
+    }
+    th, td {
+        padding: 0.7em 0.5em;
+    }
+    h1 { font-size: 2rem; }
+    h2 { font-size: 1.4rem; }
+}
+
+@media (max-width: 480px) {
+    .container {
+        margin: 1rem 0;
+        border-radius: 0;
+        box-shadow: none;
+    }
+    table, thead, tbody, th, td, tr {
+        display: block;
+    }
+    th, td {
+        padding: 0.6em 0.3em;
+    }
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+    width: 8px;
+    background: #e0e7ef;
+}
+::-webkit-scrollbar-thumb {
+    background: #b6c4e0;
+    border-radius: 8px;
+}
+
+/* Links */
+a {
+    color: #2563eb;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.18s;
+}
+a:hover {
+    color: #1e40af;
+    text-decoration: underline;
+}
+
+/* Alerts & notifications */
+.alert {
+    padding: 1.1em 1.2em;
+    border-radius: 10px;
+    margin-bottom: 1.2rem;
+    font-weight: 600;
+    font-size: 1.01rem;
+    box-shadow: 0 1px 6px rgba(30,64,175,0.07);
+    border-left: 5px solid;
+}
+
+.alert-success {
+    background: #e6f9ec;
+    color: #18794e;
+    border-color: #34d399;
+}
+
+.alert-error {
+    background: #fde8e8;
+    color: #b91c1c;
+    border-color: #f87171;
+}
+
+/* Card component */
+.card {
+    background: #f8fafc;
+    border-radius: 14px;
+    box-shadow: 0 2px 12px rgba(30,64,175,0.04);
+    padding: 1.7rem 1.3rem;
+    margin-bottom: 1.7rem;
+    transition: box-shadow 0.18s;
+}
+
+.card:hover {
+    box-shadow: 0 6px 24px rgba(30,64,175,0.09);
+}
+
+/* Remove persistent footer or "Sales App" div */
+footer, .footer, #footer, .sales-app-footer, #sales-app-footer {
+    display: none !important;
+    height: 0 !important;
+    visibility: hidden !important;
+}
+
+/* End of modern stylesheet */

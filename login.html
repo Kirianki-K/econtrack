@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Econtrack</title>
+    <!-- Link to external stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1><b><big>Econtrack</big></b></h1>
+    <p
+    <!-- Login Form Container -->
+    <div class="login-container">
+        <h2>Login</h2>
+        <!-- Login form -->
+        <form id="loginForm" action="dashboard.html" method="POST">
+            <!-- Username input -->
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+
+            <!-- Password input -->
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+
+            <!-- Submit button -->
+            <button type="submit">Login</button>
+        </form>
+        <!-- Placeholder for error messages -->
+        <div id="error-message"></div>
+    </div>
+
+    <!-- Link to external JavaScript file -->
+    <script src="login.js"></script>
+</body>
+<script>
+// Inline login functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('loginForm');
+    const errorDiv = document.getElementById('error-message');
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        errorDiv.textContent = '';
+        const username = form.username.value.trim();
+        const password = form.password.value.trim();
+        if (!username || !password) {
+            errorDiv.textContent = 'Please enter both username and password.';
+            return;
+        }
+        // Simulate login (replace with real authentication)
+        if (username === 'admin' && password === 'password') {
+            window.location.href = 'dashboard.html';
+        } else {
+            errorDiv.textContent = 'Invalid username or password.';
+        }
+    });
+});
+</script>
+<style>
+/* Loading bar styles */
+#loading-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 4px;
+    width: 0;
+    background: linear-gradient(90deg, #4caf50, #2196f3);
+    z-index: 9999;
+    transition: width 0.5s ease, opacity 0.5s;
+}
+#error-message {
+    color: #d32f2f;
+    margin-top: 10px;
+    min-height: 20px;
+    font-size: 0.95em;
+}
+</style>
+</html>
