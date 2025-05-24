@@ -2,7 +2,6 @@
 
 ![Econtrack Logo](https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/icons/cart-fill.svg)
 
-> **GitHub:** [Your GitHub Repo Link Here]  
 > **Hackathon:** Vibe Coding Hackathon — #1MillionDevs Movement  
 > **Challenge:** Build a mobile/web app that uses voice or photo input to help business owners track income and expenses in real-time.
 
